@@ -62,12 +62,12 @@ adminMap.put(group,first);////add admin to admin map
     }
 
     public int sendMessage(Message message, User sender, Group group) throws Exception {
+        List<User> userList=groupAndUserDb.get(group);
+        List<Message> messageList=groupAndMessageDb.get(group);
         if(!groupAndUserDb.containsKey(group)){
             throw new Exception("Group does not exist");
         }
-        List<User> userList=groupAndUserDb.get(group);
-        List<Message> messageList=groupAndMessageDb.get(group);
-        if(!userList.contains(sender)){
+        else if(!userList.contains(sender)){
             throw new Exception("You are not allowed to send message");
         }else{
             messageList.add(message);
