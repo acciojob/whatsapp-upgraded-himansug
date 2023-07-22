@@ -37,22 +37,40 @@ public class WhatsappRepository {
     }
 
     public Group createGroup(List<User> users) {
-        List<User> userList=users;
-        User first=userList.get(0);
-        String firstName= first.getName();
-        int totalNo=userList.size();
-        String name1="";
-        //Group group=new Group();
-        if(totalNo==2){
-           name1= userList.get(1).getName();
+//        List<User> userList=users;
+//        User first=userList.get(0);
+//        String firstName= first.getName();
+//        int totalNo=userList.size();
+//        String name1="";
+//        //Group group=new Group();
+//        if(totalNo==2){
+//           name1= userList.get(1).getName();
+//        }
+//        else{
+//             name1="Group "+totalNo;
+//
+//        }
+//        Group group=new Group(name1,totalNo);
+//adminMap.put(group,first);////add admin to admin map
+//        return group;
+
+        List<User> listOfUser = users;
+        User admin = listOfUser.get(0);
+        String groupName = "";
+        int numberOfParticipants = listOfUser.size();
+
+        if(listOfUser.size() == 2){//the group is a personal chat
+            groupName = listOfUser.get(1).getName();
         }
         else{
-             name1="Group "+totalNo;
-
+            this.customGroupCount += 1;
+            groupName = "Group " + customGroupCount;
         }
-        Group group=new Group(name1,totalNo);
-adminMap.put(group,first);////add admin to admin map
-        return group;
+
+        Group group = new Group(groupName,numberOfParticipants);
+        adminMap.put(group,admin);// add admin to the adminMap
+        groupAndUserDb.put(group,users);// add the list of group to the group-user-Map
+        return  group;
     }
 
     public int createMessage(String content) {
