@@ -83,13 +83,13 @@ adminMap.put(group,first);////add admin to admin map
         if(!groupAndUserDb.containsKey(group)){
             throw new Exception("Group does not exist");
         }
-        if(adminMap.get(group)!=approver){
+        else if(adminMap.get(group)!=approver){
             throw new Exception("Approver does not have rights");
         }
-        if(!groupAndUserDb.get(group).contains(user)){
+        else if(!groupAndUserDb.get(group).contains(user)){
             throw new Exception("User is not a participant");
         }
-        adminMap.put(group,user);
+        else {adminMap.put(group,user);}
 
         return "SUCESS";
     }
