@@ -62,24 +62,37 @@ adminMap.put(group,first);////add admin to admin map
     }
 
     public int sendMessage(Message message, User sender, Group group) throws Exception {
-        List<User> userList=groupAndUserDb.get(group);
-        List<Message> messageList=groupAndMessageDb.get(group);
-        if(groupAndUserDb.containsKey(group)){
+        if(adminMap.containsKey(group)){
+            List<User> users = groupAndUserDb.get(group);
+            Boolean userFound = false;
+            for(User user: users){
+                if(user.equals(sender)){
+                    userFound = true;
+                    break;
+                }
+            }
+            if(userFound){
+                senderMap.put(message, sender);
+                if(groupAndUserDb.containsKey(group)){
+                    if(groupAndMessageDb.get(group) !=null ){
+                        List<Message> messages = groupAndMessageDb.get(group);// it was giving me null pointer exception
 
-        if(!userList.contains(sender)){
+                        messages.add(message);
+                        groupAndMessageDb.put(group, messages);
+                        return messages.size();
+                    }else{
+                        List<Message> newMessage = new ArrayList<>();
+                        newMessage.add(message);
+                        groupAndMessageDb.put(group, newMessage);
+                        return newMessage.size();
+                    }
+
+                }
+
+            }
             throw new Exception("You are not allowed to send message");
-        }else{
-            messageList.add(message);
-            groupAndMessageDb.put(group,messageList);
-            senderMap.put(message,sender);
         }
-        }
-else{
-    throw new Exception("Group does not exist");
-}
-
-return messageList.size();
-
+        throw new Exception("Group does not exist");
     }
 
     public String changeAdmin(User approver, User user, Group group) throws Exception {
