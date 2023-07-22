@@ -64,34 +64,38 @@ adminMap.put(group,first);////add admin to admin map
     public int sendMessage(Message message, User sender, Group group) throws Exception {
         List<User> userList=groupAndUserDb.get(group);
         List<Message> messageList=groupAndMessageDb.get(group);
-        if(!groupAndUserDb.containsKey(group)){
-            throw new Exception("Group does not exist");
-        }
-        else if(!userList.contains(sender)){
+        if(groupAndUserDb.containsKey(group)){
+
+        if(!userList.contains(sender)){
             throw new Exception("You are not allowed to send message");
         }else{
             messageList.add(message);
             groupAndMessageDb.put(group,messageList);
             senderMap.put(message,sender);
         }
+        }
+else{
+    throw new Exception("Group does not exist");
+}
 
-        return messageList.size();
+return messageList.size();
 
     }
 
     public String changeAdmin(User approver, User user, Group group) throws Exception {
-        if(!groupAndUserDb.containsKey(group)){
-            throw new Exception("Group does not exist");
-        }
-        else if(adminMap.get(group)!=approver){
+        if(groupAndUserDb.containsKey(group)){
+            if(adminMap.containsKey(group)){
+                List<User> listOfUser = groupAndUserDb.get(group);
+                if(listOfUser.contains(user)) {
+
+                    adminMap.put(group,user);
+                    return "SUCCESS";
+                }
+                throw new Exception("User is not a participant");
+            }
             throw new Exception("Approver does not have rights");
         }
-        else if(!groupAndUserDb.get(group).contains(user)){
-            throw new Exception("User is not a participant");
-        }
-        else {adminMap.put(group,user);}
-
-        return "SUCESS";
+        throw new Exception("Group does not exist");
     }
 
     public int removeUser(User user) throws Exception {
